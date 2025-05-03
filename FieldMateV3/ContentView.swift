@@ -81,21 +81,19 @@ struct ContentView: View {
                             HStack {
                                 Button(action: {
                                     if !speechRecognizer.isRecording && !speechRecognizer.transcribedText.isEmpty {
-                                        // Kalau tidak sedang merekam dan hasil sudah ada, maka langsung navigasi
                                         showReportPage = true
                                     } else {
-                                        // Kalau belum ada hasil, mulai/berhenti merekam
                                         withAnimation {
                                             speechRecognizer.toggleRecording()
                                         }
                                     }
                                 }) {
                                     HStack {
-                                        Image(systemName: speechRecognizer.isRecording ? "stop.circle.fill" : "folder.circle.fill")
+                                        Image(systemName: speechRecognizer.isRecording ? "folder.circle.fill" : "folder.circle.fill")
                                             .font(.system(size: 30))
                                     }
                                     .frame(width: 80, height: 40)
-                                    .background(speechRecognizer.isRecording ? Color.red : Color("GrayColor"))
+                                    .background(speechRecognizer.isRecording ? Color("GrayColor") : Color("GrayColor"))
                                     .foregroundColor(.white)
                                     .cornerRadius(12)
                                     .padding(.top, 160)

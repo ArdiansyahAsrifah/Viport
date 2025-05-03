@@ -38,5 +38,10 @@
     <string>Kami membutuhkan akses mikrofon untuk merekam suara Anda</string>
     <key>NSSpeechRecognitionUsageDescription</key>
     <string>Kami membutuhkan izin untuk mengubah suara menjadi teks</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Kami memerlukan kamera untuk mengambil foto bukti maintenance</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Kami memerlukan akses galeri untuk upload foto bukti maintenance</string>
+
 </dict>
 </plist>

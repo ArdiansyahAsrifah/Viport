@@ -13,44 +13,89 @@ struct MaintenanceReport {
 }
 
 import SwiftUI
+import PhotosUI
 
 struct MaintenanceReportView: View {
     var report: MaintenanceReport
     var date: Date
-
+    
+    @State private var selectedImage: UIImage?
+    @State private var isShowingImagePicker = false
+    @State private var showCamera = false
+    @State private var imagePickerSource: UIImagePickerController.SourceType = .photoLibrary
+    
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                Text("Laporan Maintenance")
-                    .font(.title)
-                    .bold()
-                
-                Text("Apple Developer Academy | Cek AC")
-                    .font(.headline)
-                
-                Text("\(formattedDate(date)) – \(formattedTime(date))")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
+        ZStack {
+            Color("YellowColor")
+                .ignoresSafeArea()
+            
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("Laporan Maintenance")
+                        .font(.title)
+                        .bold()
+                    
+                    Text("Apple Developer Academy | Cek AC")
+                        .font(.headline)
+                    
+                    Text("\(formattedDate(date)) – \(formattedTime(date))")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                    
+                    reportCard(icon: "map", title: "Lokasi", content: report.lokasi)
+                    reportCard(icon: "exclamationmark.circle", title: "Kerusakan", content: report.kerusakan)
+                    reportCard(icon: "face.dashed", title: "Akibat", content: report.akibat)
+                    reportCard(icon: "magnifyingglass", title: "Tindakan", content: report.tindakan)
+                    
+                    Text("Bukti Pengerjaan")
+                        .font(.headline)
+                        .padding(.top)
+                    
+                    if let image = selectedImage {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(height: 150)
+                            .clipped()
+                            .cornerRadius(12)
+                    } else {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color("YellowReport"))
+                            .frame(height: 150)
+                            .overlay(
+                                Text("Belum ada foto")
+                                    .foregroundColor(.gray)
+                            )
+                    }
+                    
+                    HStack {
+                        Button(action: {
+                            imagePickerSource = .camera
+                            isShowingImagePicker = true
+                        }) {
+                            Label("Ambil Foto", systemImage: "camera")
+                        }
+                        .buttonStyle(.borderedProminent)
 
-                reportCard(icon: "map", title: "Lokasi", content: report.lokasi)
-                reportCard(icon: "exclamationmark.circle", title: "Kerusakan", content: report.kerusakan)
-                reportCard(icon: "face.dashed", title: "Akibat", content: report.akibat)
-                reportCard(icon: "magnifyingglass", title: "Tindakan", content: report.tindakan)
-
-                Text("Bukti Pengerjaan")
-                    .font(.headline)
-                    .padding(.top)
-
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(.systemGray6))
-                    .frame(height: 150)
+                        Button(action: {
+                            imagePickerSource = .photoLibrary
+                            isShowingImagePicker = true
+                        }) {
+                            Label("Upload Foto", systemImage: "photo")
+                        }
+                        .buttonStyle(.bordered)
+                    }
+                }
+                .padding()
             }
-            .padding()
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("Back")
         }
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("Back")
+        .sheet(isPresented: $isShowingImagePicker) {
+            ImagePicker(image: $selectedImage, sourceType: imagePickerSource)
+        }
     }
-
+    
     private func reportCard(icon: String, title: String, content: String) -> some View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: icon)
@@ -66,7 +111,8 @@ struct MaintenanceReportView: View {
             }
         }
         .padding()
-        .background(Color(.systemYellow).opacity(0.1))
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color("YellowReport"))
         .cornerRadius(12)
     }
 
@@ -83,6 +129,7 @@ struct MaintenanceReportView: View {
         return formatter.string(from: date)
     }
 }
+
 
 #Preview {
     MaintenanceReportView(
