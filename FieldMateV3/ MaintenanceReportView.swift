@@ -31,9 +31,19 @@ struct MaintenanceReportView: View {
             
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("Laporan Maintenance")
-                        .font(.title)
-                        .bold()
+                    HStack {
+                        Text("Laporan Maintenance")
+                            .font(.title)
+                            .bold()
+                        
+                        Button(action: {
+                            exportToPDF()
+                        }) {
+                            Image(systemName: "doc.fill")
+                                .font(.title2)
+                                .foregroundColor(.black)
+                        }
+                    }
                     
                     Text("Apple Developer Academy | Cek AC")
                         .font(.headline)
@@ -85,6 +95,7 @@ struct MaintenanceReportView: View {
                         }
                         .buttonStyle(.bordered)
                     }
+                    
                 }
                 .padding()
             }
@@ -114,6 +125,27 @@ struct MaintenanceReportView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color("YellowReport"))
         .cornerRadius(12)
+    }
+    
+    private func exportToPDF() {
+        let image = self.body.snapshot()
+        let pdfRenderer = UIGraphicsPDFRenderer(bounds: CGRect(origin: .zero, size: image.size))
+        
+        let pdfData = pdfRenderer.pdfData { context in
+            context.beginPage()
+            image.draw(at: .zero)
+        }
+        
+        let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent("MaintenanceReport.pdf")
+        
+        do {
+            try pdfData.write(to: tempURL)
+            // Share sheet
+            let av = UIActivityViewController(activityItems: [tempURL], applicationActivities: nil)
+            UIApplication.shared.windows.first?.rootViewController?.present(av, animated: true)
+        } catch {
+            print("Failed to write PDF data: \(error)")
+        }
     }
 
     private func formattedDate(_ date: Date) -> String {
