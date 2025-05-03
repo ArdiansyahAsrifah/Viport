@@ -15,12 +15,13 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            // Latar kuning penuh layar
+            // Backround
             Color("YellowColor")
                 .ignoresSafeArea()
 
+            // Header
             VStack(spacing: 16) {
-                // Header
+
                 VStack {
                     Text("Laporkan")
                         .font(.largeTitle)
@@ -30,10 +31,9 @@ struct ContentView: View {
                         .fontWeight(.bold)
                 }
                 .foregroundColor(.brown)
-//                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal)
 
-                // Area laporan
+                // Area Laporan
                 ZStack(alignment: .bottomTrailing) {
                     RoundedRectangle(cornerRadius: 15)
                         .fill(Color("YellowReport"))
@@ -55,16 +55,13 @@ struct ContentView: View {
 
                 
                 
-                // Walkie-Talkie box
+                // Walkie-Talkie
                 ZStack {
-                    // Gambar sebagai latar belakang tombol
                     Image("WalkieTalkieComp")
                         .resizable()
                                 .frame(width: 250, height: 500)
                                 .offset(x: -0, y: 150)
                         
-
-
                     VStack(spacing: 8) {
                         RoundedRectangle(cornerRadius: 10)
                             .fill(Color.green.opacity(0.7))
@@ -76,37 +73,58 @@ struct ContentView: View {
                             .frame(width: 200, height: 100)
                             .offset(x: -0, y: 140)
 
-                        Button(action: {
-                            withAnimation {
-                                speechRecognizer.toggleRecording()
-                            }
-                        }) {
-                            HStack {
-                                Image(systemName: speechRecognizer.isRecording ? "stop.circle.fill" : "mic.circle.fill")
-                                    .font(.system(size: 30))
-//                                Text(speechRecognizer.isRecording ? "Berhenti Merekam" : "Mulai Rekam")
-//                                    .font(.headline)
-                            }
-//                            .padding()
-                            .frame(width: 80, height: 40)
-                            .background(speechRecognizer.isRecording ? Color.red : Color.green)
-                            .foregroundColor(.white)
-                            .cornerRadius(12)
-//                            .offset(x: 60, y: 90)
-                            .padding(.top, 160)
-                            .padding(.leading, 120)
+                        HStack {
+                            Button(action: {
+                                withAnimation {
+                                    speechRecognizer.toggleRecording()
+                                }
+                            }) {
+                                HStack {
+                                    Image(systemName: speechRecognizer.isRecording ? "stop.circle.fill" : "folder.circle.fill")
+                                        .font(.system(size: 30))
 
+                                }
+                                .frame(width: 80, height: 40)
+                                .background(speechRecognizer.isRecording ? Color.red : Color("GrayColor"))
+                                .foregroundColor(.white)
+                                .cornerRadius(12)
+                                .padding(.top, 160)
+                                .padding(.leading, 120)
+
+                            }
+                            
+                            Button(action: {
+                                withAnimation {
+                                    speechRecognizer.toggleRecording()
+                                }
+                            }) {
+                                HStack {
+                                    Image(systemName: speechRecognizer.isRecording ? "stop.circle.fill" : "mic.circle.fill")
+                                        .font(.system(size: 30))
+
+                                }
+                                .frame(width: 80, height: 40)
+                                .background(speechRecognizer.isRecording ? Color.red : Color("YellowColor"))
+                                .foregroundColor(.white)
+                                .cornerRadius(12)
+                                .padding(.top, 160)
+                                .padding(.leading, 10)
+
+                            }
+                            
+                            
                         }
-//                        .padding(.horizontal, 20)
+                        .padding(.leading, -120)
+                        .padding(.top, -10)
+                        
                     }
                 }
                 .frame(height: 250)
-//                .clipShape(RoundedRectangle(cornerRadius: 20))
                 .shadow(radius: 5)
 
                 .padding()
                 
-                Spacer() // untuk isi sisa layar bawah
+                Spacer()
             }
             .padding(.top)
         }
