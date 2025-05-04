@@ -6,9 +6,14 @@
 //
 
 import SwiftUI
+import TipKit
 
 @main
 struct FieldMateV3App: App {
+    init() {
+            try? Tips.configure()
+        }
+    
     var body: some Scene {
         WindowGroup {
             ContentView()

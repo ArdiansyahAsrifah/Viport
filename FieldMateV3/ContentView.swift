@@ -9,12 +9,43 @@ import SwiftUI
 import AVFoundation
 import Speech
 import NaturalLanguage
+import TipKit
+
+struct MicTip: Tip {
+    var title: Text {
+        Text("Tekan untuk Merekam")
+    }
+
+    var message: Text? {
+        Text("Gunakan tombol ini untuk mulai merekam laporan maintenance.")
+    }
+
+    var image: Image? {
+        Image(systemName: "mic.circle.fill")
+    }
+}
+
+struct FolderTip: Tip {
+    var title: Text {
+        Text("Lihat Laporan Kamu")
+    }
+
+    var message: Text? {
+        Text("Jika sudah selesai merekam, tekan tombol ini untuk melihat ringkasan laporan.")
+    }
+
+    var image: Image? {
+        Image(systemName: "folder.circle.fill")
+    }
+}
+
 
 struct ContentView: View {
     @State private var showReportPage = false
     @StateObject private var speechRecognizer = SpeechRecognizer()
 
-    
+    @State private var micTip = MicTip()
+    @State private var folderTip = FolderTip()
     
     var body: some View {
         
@@ -28,6 +59,10 @@ struct ContentView: View {
                 VStack(spacing: 16) {
 
                     VStack {
+                        TipView(micTip)
+                            .offset(x: 0)
+                        TipView(folderTip)
+                            .offset(x: 0)
                         Text("Laporkan")
                             .font(.largeTitle)
                             .fontWeight(.bold)
@@ -99,6 +134,7 @@ struct ContentView: View {
                                     .padding(.top, 160)
                                     .padding(.leading, 120)
                                 }
+                                
 
                                 
                                 Button(action: {
@@ -123,6 +159,7 @@ struct ContentView: View {
                                     .padding(.leading, 10)
 
                                 }
+                                
                                 
                                 
                             }
