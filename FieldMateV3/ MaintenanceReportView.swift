@@ -112,23 +112,42 @@ struct MaintenanceReportView: View {
                             )
                     }
                     
-                    HStack {
+                    HStack(spacing: 16) {
                         Button(action: {
                             imagePickerSource = .camera
                             isShowingImagePicker = true
                         }) {
-                            Label("Ambil Foto", systemImage: "camera")
+                            VStack {
+                                Image(systemName: "camera")
+                                    .font(.title2)
+                                Text("Kamera")
+                                    .font(.caption)
+                            }
+                            .frame(width: 80, height: 80)
+                            .background(Color.black.opacity(0.05))
+                            .foregroundColor(.black)
+                            .cornerRadius(12)
                         }
-                        .buttonStyle(.borderedProminent)
 
                         Button(action: {
                             imagePickerSource = .photoLibrary
                             isShowingImagePicker = true
                         }) {
-                            Label("Upload Foto", systemImage: "photo")
+                            VStack {
+                                Image(systemName: "photo.on.rectangle")
+                                    .font(.title2)
+                                Text("Galeri")
+                                    .font(.caption)
+                            }
+                            .frame(width: 80, height: 80)
+                            .background(Color.black.opacity(0.05))
+                            .foregroundColor(.black)
+                            .cornerRadius(12)
                         }
-                        .buttonStyle(.bordered)
                     }
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, 8)
+
                     
                 }
                 .padding()
