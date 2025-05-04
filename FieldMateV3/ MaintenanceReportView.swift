@@ -23,7 +23,15 @@ struct MaintenanceReportView: View {
     @State private var isShowingImagePicker = false
     @State private var showCamera = false
     @State private var imagePickerSource: UIImagePickerController.SourceType = .photoLibrary
-    
+    @State private var selectedTempat: String = ""
+    let pilihanTempat = [
+        "Apple Developer Academy",
+        "Purwadika School",
+        "Traveloka Campuss",
+        "Sinar Mas Group",
+        "Grha Unilever"
+    ]
+
     var body: some View {
         ZStack {
             Color("YellowColor")
@@ -37,16 +45,42 @@ struct MaintenanceReportView: View {
                             .bold()
                         
                         Button(action: {
-                            exportToPDF()
+                            
                         }) {
-                            Image(systemName: "doc.fill")
-                                .font(.title2)
-                                .foregroundColor(.black)
+                            Label("", systemImage: "")
+                                .font(.subheadline)
+                                .padding(10)
+                                .frame(maxWidth: .infinity)
+                                .background(Color("yellow"))
+                                .foregroundColor(.white)
+                                .cornerRadius(12)
                         }
+//                        .frame(width: 100, height: 100)
+                        
                     }
                     
-                    Text("Apple Developer Academy | Cek AC")
-                        .font(.headline)
+                    Button(action: {
+                        exportToPDF()
+                    }) {
+                        Label("Ekspor ke PDF", systemImage: "doc.fill")
+                            .font(.headline)
+                            .padding(10)
+                            .frame(maxWidth: .infinity)
+                            .background(Color.black)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                    }
+
+                    
+                    Picker("Pilih Lokasi", selection: $selectedTempat) {
+                        ForEach(pilihanTempat, id: \.self) { tempat in
+                            Text(tempat)
+                        }
+                    }
+                    .pickerStyle(.wheel)
+                    .font(.title2)
+                    .padding(.top, -80)
+
                     
                     Text("\(formattedDate(date)) – \(formattedTime(date))")
                         .font(.subheadline)
@@ -104,6 +138,9 @@ struct MaintenanceReportView: View {
         }
         .sheet(isPresented: $isShowingImagePicker) {
             ImagePicker(image: $selectedImage, sourceType: imagePickerSource)
+        }
+        .onAppear {
+            selectedTempat = report.lokasi
         }
     }
     

@@ -104,6 +104,10 @@ struct ContentView: View {
                                 Button(action: {
                                     withAnimation {
                                         speechRecognizer.toggleRecording()
+                                        if !speechRecognizer.isRecording {
+                                                    // Proses ringkasan ketika selesai merekam
+                                                    speechRecognizer.makeSummary(from: speechRecognizer.transcribedText)
+                                                }
                                     }
                                 }) {
                                     HStack {
@@ -141,7 +145,7 @@ struct ContentView: View {
             }
             .navigationDestination(isPresented: $showReportPage) {
                         MaintenanceReportView(
-                            report: parseReport(from: speechRecognizer.transcribedText),
+                            report: parseReport(from: speechRecognizer.summaryText),
                             date: Date()
                         )
             }

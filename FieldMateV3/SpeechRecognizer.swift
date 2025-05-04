@@ -145,13 +145,13 @@ class SpeechRecognizer: NSObject, ObservableObject, SFSpeechRecognizerDelegate {
             summary += "Lokasi: \(location)\n"
         }
         if !component.isEmpty {
-            summary += "Komponen yang Diperbaiki: \(component)\n"
+            summary += "Kerusakan: \(component)\n"
         }
         if !damageType.isEmpty {
-            summary += "Bentuk Kerusakan: \(damageType)\n"
+            summary += "Akibat: \(damageType)\n"
         }
         if !actionTaken.isEmpty {
-            summary += "Tindakan yang Dilakukan: \(actionTaken)\n"
+            summary += "Tindakan: \(actionTaken)\n"
         }
 
         self.summaryText = summary.trimmingCharacters(in: .whitespacesAndNewlines)
