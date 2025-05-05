@@ -53,18 +53,18 @@ struct MaintenanceReportView: View {
                             .font(.title)
                             .bold()
                         
-                        
-                        Button(action: {
-                            
-                        }) {
-                            Label("", systemImage: "")
-                                .font(.subheadline)
-                                .padding(10)
-                                .frame(maxWidth: .infinity)
-                                .background(Color("yellow"))
-                                .foregroundColor(.white)
-                                .cornerRadius(12)
-                        }
+//                        
+//                        Button(action: {
+//                            exportToPDF()
+//                        }) {
+//                            Label("Ekspor Ke PDF", systemImage: "doc.fill")
+//                                .font(.subheadline)
+//                                .padding(10)
+//                                .frame(maxWidth: .infinity)
+//                                .background(Color.black)
+//                                .foregroundColor(.white)
+//                                .cornerRadius(12)
+//                        }
 //                        .frame(width: 100, height: 100)
                         
                     }
@@ -82,19 +82,25 @@ struct MaintenanceReportView: View {
                     }
 
                     //MARK: - Choose Place
-                    Picker("Pilih Lokasi", selection: $selectedTempat) {
-                        ForEach(pilihanTempat, id: \.self) { tempat in
-                            Text(tempat)
+                    HStack {
+                        Text("Pilih Lokasi : ")
+                            .font(.headline)
+
+                        Picker("Pilih Lokasi", selection: $selectedTempat) {
+                            ForEach(pilihanTempat, id: \.self) { tempat in
+                                Text(tempat)
+                            }
                         }
+                        .pickerStyle(.menu)
+                        .font(.title2)
+                        .padding(.leading, -20)
                     }
-                    .pickerStyle(.wheel)
-                    .font(.title2)
-                    .padding(.top, -80)
+                    
 
                     //MARK: - Time
                     Text("\(formattedDate(date)) – \(formattedTime(date))")
                         .font(.subheadline)
-                        .foregroundColor(.gray)
+                        .foregroundColor(.black)
                     
                     //MARK: - ReportCard
                     reportCard(icon: "map", title: "Lokasi", content: report.lokasi)

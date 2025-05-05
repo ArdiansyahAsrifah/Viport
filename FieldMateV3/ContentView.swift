@@ -73,7 +73,6 @@ struct ContentView: View {
                             .font(.largeTitle)
                             .fontWeight(.bold)
                     }
-                    .foregroundColor(.brown)
                     .padding(.horizontal)
 
                     // MARK: - Area Laporan
