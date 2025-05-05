@@ -5,12 +5,14 @@
 //  Created by Muhammad Ardiansyah Asrifah on 01/05/25.
 //
 
+//MARK: - Importing Framework
 import SwiftUI
 import AVFoundation
 import Speech
 import NaturalLanguage
 import TipKit
 
+//MARK: - MicTipView
 struct MicTip: Tip {
     var title: Text {
         Text("Tekan untuk Merekam")
@@ -25,6 +27,7 @@ struct MicTip: Tip {
     }
 }
 
+//MARK: - FolderTipView
 struct FolderTip: Tip {
     var title: Text {
         Text("Lihat Laporan Kamu")
@@ -41,9 +44,9 @@ struct FolderTip: Tip {
 
 
 struct ContentView: View {
+    // MARK: - Variable
     @State private var showReportPage = false
     @StateObject private var speechRecognizer = SpeechRecognizer()
-
     @State private var micTip = MicTip()
     @State private var folderTip = FolderTip()
     
@@ -51,11 +54,11 @@ struct ContentView: View {
         
         NavigationStack {
             ZStack {
-                // Backround
+                // MARK: - Backround
                 Color("YellowColor")
                     .ignoresSafeArea()
 
-                // Header
+                // MARK: - Header
                 VStack(spacing: 16) {
 
                     VStack {
@@ -73,7 +76,7 @@ struct ContentView: View {
                     .foregroundColor(.brown)
                     .padding(.horizontal)
 
-                    // Area Laporan
+                    // MARK: - Area Laporan
                     ZStack(alignment: .bottomTrailing) {
                         RoundedRectangle(cornerRadius: 15)
                             .fill(Color("YellowReport"))
@@ -95,7 +98,7 @@ struct ContentView: View {
 
                     
                     
-                    // Walkie-Talkie
+                    // MARK: - Walkie-Talkie
                     ZStack {
                         Image("WalkieTalkieComp")
                             .resizable()
@@ -190,6 +193,7 @@ struct ContentView: View {
        
     }
     
+    //MARK: - Report Parsing
     private func parseReport(from text: String) -> MaintenanceReport {
         func extract(_ key: String) -> String {
             let pattern = "\(key):\\s*(.*?)(\\n|$)"

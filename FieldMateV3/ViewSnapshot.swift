@@ -9,12 +9,16 @@ import SwiftUI
 
 extension View {
     func snapshot() -> UIImage {
+        
         let controller = UIHostingController(rootView: self)
         let view = controller.view
 
-        let targetSize = controller.view.intrinsicContentSize
+
+        let targetSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+        
         view?.bounds = CGRect(origin: .zero, size: targetSize)
         view?.backgroundColor = .clear
+
 
         let renderer = UIGraphicsImageRenderer(size: targetSize)
         return renderer.image { _ in
@@ -22,3 +26,4 @@ extension View {
         }
     }
 }
+

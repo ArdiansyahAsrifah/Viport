@@ -5,6 +5,7 @@
 //  Created by Muhammad Ardiansyah Asrifah on 01/05/25.
 //
 
+//MARK: - Importing Framework
 import Foundation
 import AVFoundation
 import Speech
@@ -20,6 +21,7 @@ class SpeechRecognizer: NSObject, ObservableObject, SFSpeechRecognizerDelegate {
     @Published var transcribedText = ""
     @Published var summaryText = ""
 
+    //MARK: - Requesting Permission
     func requestPermissions() {
         SFSpeechRecognizer.requestAuthorization { authStatus in
             DispatchQueue.main.async {
@@ -36,6 +38,7 @@ class SpeechRecognizer: NSObject, ObservableObject, SFSpeechRecognizerDelegate {
         }
     }
 
+    //MARK: - Recording Part
     func toggleRecording() {
         if isRecording {
             stopRecording()
@@ -103,10 +106,11 @@ class SpeechRecognizer: NSObject, ObservableObject, SFSpeechRecognizerDelegate {
         makeSummary(from: transcribedText)
     }
 
+    //MARK: - Create Summary (Parsing Keyword
     func makeSummary(from text: String) {
-        let locationKeywords = ["lokasi", "di", "tempat", "area", "posisi"]
+        let locationKeywords = ["lokasi", "di", "tempat", "area", "posisi", "ruang", "titik", "dekat"]
         let componentKeywords = ["komponen", "bagian", "mesin", "sistem", "perangkat"]
-        let damageKeywords = ["kerusakan", "rusak", "pecah", "hilang", "terbakar"]
+        let damageKeywords = ["kerusakan", "rusak", "pecah", "hilang", "terbakar", "akibat"]
         let actionKeywords = ["perbaikan", "tindakan", "solusi", "perbaiki", "mengganti", "memperbaiki"]
 
         var location = ""
@@ -115,7 +119,8 @@ class SpeechRecognizer: NSObject, ObservableObject, SFSpeechRecognizerDelegate {
         var actionTaken = ""
 
 
-        let sentences = text.split(whereSeparator: { $0 == "." })
+//        let sentences = text.split(whereSeparator: { $0 == "." })
+        let sentences = text.split(separator: "roger")
 
         for sentence in sentences {
             let trimmedSentence = sentence.trimmingCharacters(in: .whitespacesAndNewlines)

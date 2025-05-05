@@ -5,6 +5,7 @@
 //  Created by Muhammad Ardiansyah Asrifah on 03/05/25.
 //
 
+//MARK: - Variable Report
 struct MaintenanceReport {
     var lokasi: String
     var kerusakan: String
@@ -12,9 +13,12 @@ struct MaintenanceReport {
     var tindakan: String
 }
 
+
+//MARK: - Importing Framework
 import SwiftUI
 import PhotosUI
 
+//MARK: - Maintenance Report View
 struct MaintenanceReportView: View {
     var report: MaintenanceReport
     var date: Date
@@ -34,15 +38,21 @@ struct MaintenanceReportView: View {
 
     var body: some View {
         ZStack {
+            
+            // MARK: - Backround
             Color("YellowColor")
                 .ignoresSafeArea()
+            
             
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     HStack {
+                        
+                        // MARK: - Tittle
                         Text("Laporan Maintenance")
                             .font(.title)
                             .bold()
+                        
                         
                         Button(action: {
                             
@@ -58,7 +68,7 @@ struct MaintenanceReportView: View {
 //                        .frame(width: 100, height: 100)
                         
                     }
-                    
+                    //MARK: - Export To PDF Button
                     Button(action: {
                         exportToPDF()
                     }) {
@@ -71,7 +81,7 @@ struct MaintenanceReportView: View {
                             .cornerRadius(12)
                     }
 
-                    
+                    //MARK: - Choose Place
                     Picker("Pilih Lokasi", selection: $selectedTempat) {
                         ForEach(pilihanTempat, id: \.self) { tempat in
                             Text(tempat)
@@ -81,16 +91,18 @@ struct MaintenanceReportView: View {
                     .font(.title2)
                     .padding(.top, -80)
 
-                    
+                    //MARK: - Time
                     Text("\(formattedDate(date)) – \(formattedTime(date))")
                         .font(.subheadline)
                         .foregroundColor(.gray)
                     
+                    //MARK: - ReportCard
                     reportCard(icon: "map", title: "Lokasi", content: report.lokasi)
                     reportCard(icon: "exclamationmark.circle", title: "Kerusakan", content: report.kerusakan)
                     reportCard(icon: "face.dashed", title: "Akibat", content: report.akibat)
                     reportCard(icon: "magnifyingglass", title: "Tindakan", content: report.tindakan)
                     
+                    //MARK: - Evidence Report
                     Text("Bukti Pengerjaan")
                         .font(.headline)
                         .padding(.top)
@@ -163,6 +175,7 @@ struct MaintenanceReportView: View {
         }
     }
     
+    //MARK: - Report Card Function
     private func reportCard(icon: String, title: String, content: String) -> some View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: icon)
@@ -183,6 +196,7 @@ struct MaintenanceReportView: View {
         .cornerRadius(12)
     }
     
+    //MARK: - Export To PDF Function
     private func exportToPDF() {
         let image = self.body.snapshot()
         let pdfRenderer = UIGraphicsPDFRenderer(bounds: CGRect(origin: .zero, size: image.size))
@@ -196,7 +210,6 @@ struct MaintenanceReportView: View {
         
         do {
             try pdfData.write(to: tempURL)
-            // Share sheet
             let av = UIActivityViewController(activityItems: [tempURL], applicationActivities: nil)
             UIApplication.shared.windows.first?.rootViewController?.present(av, animated: true)
         } catch {
@@ -204,6 +217,7 @@ struct MaintenanceReportView: View {
         }
     }
 
+    //MARK: - Date Format
     private func formattedDate(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE, dd MMMM yyyy"
@@ -211,6 +225,7 @@ struct MaintenanceReportView: View {
         return formatter.string(from: date)
     }
 
+    //MARK: - Time Format
     private func formattedTime(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH.mm"
