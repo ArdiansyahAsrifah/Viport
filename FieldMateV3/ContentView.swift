@@ -66,54 +66,56 @@ struct ContentView: View {
                             .offset(x: 0)
                         TipView(folderTip)
                             .offset(x: 0)
-                        Text("Laporkan")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                        Text("Maintenance")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
+                        
                     }
                     .padding(.horizontal)
 
                     // MARK: - Area Laporan
-                    ZStack(alignment: .bottomTrailing) {
-                        RoundedRectangle(cornerRadius: 15)
-                            .fill(Color("YellowReport"))
-                            .frame(height: 180)
+//                    ZStack(alignment: .bottomTrailing) {
+//                        RoundedRectangle(cornerRadius: 15)
+//                            .fill(Color("YellowReport"))
+//                            .frame(height: 180)
+//
+//                        ScrollView {
+//                            Text(speechRecognizer.transcribedText.isEmpty ? "..." : speechRecognizer.transcribedText)
+//                                .padding()
+//                                .frame(maxWidth: .infinity, alignment: .leading)
+//                        }
+//                        .frame(height: 180)
+//
+//                        Text("Rekaman Laporan Kamu")
+//                            .font(.caption)
+//                            .foregroundColor(.gray)
+//                            .padding(8)
+//                    }
+//                    .padding(.horizontal)
 
-                        ScrollView {
-                            Text(speechRecognizer.transcribedText.isEmpty ? "..." : speechRecognizer.transcribedText)
-                                .padding()
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                        .frame(height: 180)
-
-                        Text("Rekaman Laporan Kamu")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                            .padding(8)
-                    }
-                    .padding(.horizontal)
-
-                    
+//                    Button(action: {
+//                        self
+//                    }
                     
                     // MARK: - Walkie-Talkie
                     ZStack {
-                        Image("WalkieTalkieComp")
+                        Image("WalkyTalkieV2")
                             .resizable()
-                                    .frame(width: 250, height: 500)
-                                    .offset(x: -0, y: 150)
+                                    .frame(width: 325, height: 797)
+                                    .offset(x: -0, y: 240)
                             
                         VStack(spacing: 8) {
                             RoundedRectangle(cornerRadius: 10)
-                                .fill(Color.green.opacity(0.7))
+                                .fill(Color("BlueColor"))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.black, lineWidth: 6)
+                                )
                                 .overlay(
                                     Text(speechRecognizer.isRecording ? "••••" : "82.33")
                                         .font(.system(size: 50, weight: .bold, design: .monospaced))
-                                        .foregroundColor(.black)
+                                        .foregroundColor(.white)
                                 )
-                                .frame(width: 200, height: 100)
-                                .offset(x: -0, y: 140)
+                                .frame(width: 267, height: 305)
+                                .offset(x: 5, y: 240)
+
 
                             HStack {
                                 Button(action: {
@@ -129,8 +131,8 @@ struct ContentView: View {
                                         Image(systemName: speechRecognizer.isRecording ? "folder.circle.fill" : "folder.circle.fill")
                                             .font(.system(size: 30))
                                     }
-                                    .frame(width: 80, height: 40)
-                                    .background(speechRecognizer.isRecording ? Color("GrayColor") : Color("GrayColor"))
+                                    .frame(width: 130, height: 40)
+                                    .background(speechRecognizer.isRecording ? Color("BlackColor") : Color("BlackColor"))
                                     .foregroundColor(.white)
                                     .cornerRadius(12)
                                     .padding(.top, 160)
