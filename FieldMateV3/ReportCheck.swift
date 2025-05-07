@@ -1,9 +1,9 @@
 //
-//  ContentView.swift
+//  ReportCheck.swift
 //  FieldMateV3
 //
-//  Created by Muhammad Ardiansyah Asrifah on 01/05/25.
-//
+//  Created by Muhammad Ardiansyah Asrifah on 07/05/25.
+
 
 //MARK: - Importing Framework
 import SwiftUI
@@ -12,45 +12,30 @@ import Speech
 import NaturalLanguage
 import TipKit
 
-//MARK: - MicTipView
-struct MicTip: Tip {
-    var title: Text {
-        Text("Tekan untuk Merekam")
-    }
-    
-    var message: Text? {
-        Text("Gunakan tombol ini untuk mulai merekam laporan maintenance.")
-    }
-    
-    var image: Image? {
-        Image(systemName: "mic.circle.fill")
-    }
-}
 
-//MARK: - FolderTipView
-struct FolderTip: Tip {
-    var title: Text {
-        Text("Lihat Laporan Kamu")
-    }
-    
-    var message: Text? {
-        Text("Jika sudah selesai merekam, tekan tombol ini untuk melihat ringkasan laporan.")
-    }
-    
-    var image: Image? {
-        Image(systemName: "folder.circle.fill")
-    }
-}
-
-
-struct ContentView: View {
+struct ReportCheck: View {
     // MARK: - Variable
     @State private var showReportPage = false
     @StateObject private var speechRecognizer = SpeechRecognizer()
     @State private var micTip = MicTip()
     @State private var folderTip = FolderTip()
     @State private var isExpanded = false
-    @State private var navigateToReportCheck = false
+    
+    var report: MaintenanceReport
+    var date: Date
+    
+    @State private var selectedImage: UIImage?
+    @State private var isShowingImagePicker = false
+    @State private var showCamera = false
+    @State private var imagePickerSource: UIImagePickerController.SourceType = .photoLibrary
+    @State private var selectedTempat: String = ""
+    let pilihanTempat = [
+        "Apple Developer Academy",
+        "Purwadika School",
+        "Traveloka Campuss",
+        "Sinar Mas Group",
+        "Grha Unilever"
+    ]
     
     var body: some View {
         
@@ -92,14 +77,58 @@ struct ContentView: View {
 
                                 ScrollView {
                                     VStack(alignment: .center, spacing: 20) {
-                                        Text(speechRecognizer.transcribedText.isEmpty ? "Laporkan Maintenance" : speechRecognizer.transcribedText)
+                                        
+                                        Text("\(formattedDate(date)) – \(formattedTime(date))")
+                                            .font(.system(size: 18, weight: .semibold, design: .default))
                                             .foregroundColor(.white)
-                                            .font(.system(size: 20, weight: .bold))
-                                            .multilineTextAlignment(.center)
-                                            .padding(.horizontal, 16)
-                                            .padding(.top, 10)
+                                        
+                                        HStack(spacing: 8) {
+                                            Text("Pilih Lokasi : ")
+                                                .font(.headline)
+                                                .foregroundStyle(.white)
 
+                                            Picker("Pilih Lokasi", selection: $selectedTempat) {
+                                                ForEach(pilihanTempat, id: \.self) { tempat in
+                                                    Text(tempat)
+                                                }
+                                            }
+                                            .pickerStyle(.menu)
+                                            .font(.title2)
+                                            .padding(.leading, -20)
+                                        }
+                                        .padding(.leading, -140)
+                                        
+                                        //MARK: - ReportCard
+                                        reportCard(icon: "map", title: "Lokasi", content: report.lokasi)
+                                        reportCard(icon: "exclamationmark.circle", title: "Kerusakan", content: report.kerusakan)
+                                        reportCard(icon: "face.dashed", title: "Akibat", content: report.akibat)
+                                        reportCard(icon: "magnifyingglass", title: "Tindakan", content: report.tindakan)
+                                        
                                     
+                                        Text("Bukti Pengerjaan")
+                                            .font(.system(size: 18, weight: .bold, design: .default))
+                                            .padding(.top)
+                                            .foregroundStyle(.white)
+                                        
+                                        if let image = selectedImage {
+                                            Image(uiImage: image)
+                                                .resizable()
+                                                .scaledToFill()
+                                                .frame(height: 150)
+                                                .clipped()
+                                                .cornerRadius(12)
+                                        } else {
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .fill(Color("YellowReport"))
+                                                .frame(height: 150)
+                                                .overlay(
+                                                    Text("Belum ada foto")
+                                                        .foregroundColor(.gray)
+                                                )
+                                        }
+                                        
+                                        
+                                        
                                     }
                                     .frame(width: 300)
                                 }
@@ -113,10 +142,9 @@ struct ContentView: View {
                             
                             HStack {
                                 VStack {
-                                    
                                     Button(action: {
                                         if !speechRecognizer.isRecording && !speechRecognizer.transcribedText.isEmpty {
-                                            navigateToReportCheck = true
+                                            showReportPage = true
                                         } else {
                                             withAnimation {
                                                 speechRecognizer.toggleRecording()
@@ -138,8 +166,6 @@ struct ContentView: View {
                                         .foregroundColor(.white)
                                         .cornerRadius(12)
                                         .padding(.leading, 120)
-                                        
-                                        
                                     }
                                     
                                     Button(action: {
@@ -240,8 +266,8 @@ struct ContentView: View {
             .onAppear {
                 speechRecognizer.requestPermissions()
             }
-            .navigationDestination(isPresented: $navigateToReportCheck) {
-                ReportCheck(
+            .navigationDestination(isPresented: $showReportPage) {
+                MaintenanceReportView(
                     report: parseReport(from: speechRecognizer.summaryText),
                     date: Date()
                 )
@@ -271,13 +297,77 @@ struct ContentView: View {
         )
     }
     
+    //MARK: - Date Format
+    private func formattedDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE, dd MMMM yyyy"
+        formatter.locale = Locale(identifier: "id_ID")
+        return formatter.string(from: date)
+    }
+
+    //MARK: - Time Format
+    private func formattedTime(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH.mm"
+        return formatter.string(from: date)
+    }
+    
+    //MARK: - Report Card Function
+    private func reportCard(icon: String, title: String, content: String) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: icon)
+                .font(.title)
+                .frame(width: 20)
+                .foregroundColor(.gray)
+            VStack(alignment: .leading) {
+                Text(title)
+                    .font(.headline)
+                Text(content)
+                    .font(.body)
+                    .foregroundColor(.gray)
+            }
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color("YellowReport"))
+        .cornerRadius(12)
+    }
+    
+    //MARK: - Export To PDF Function
+    private func exportToPDF() {
+        let image = self.body.snapshot()
+        let pdfRenderer = UIGraphicsPDFRenderer(bounds: CGRect(origin: .zero, size: image.size))
+        
+        let pdfData = pdfRenderer.pdfData { context in
+            context.beginPage()
+            image.draw(at: .zero)
+        }
+        
+        let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent("MaintenanceReport.pdf")
+        
+        do {
+            try pdfData.write(to: tempURL)
+            let av = UIActivityViewController(activityItems: [tempURL], applicationActivities: nil)
+            UIApplication.shared.windows.first?.rootViewController?.present(av, animated: true)
+        } catch {
+            print("Failed to write PDF data: \(error)")
+        }
+    }
+    
 }
 
 #Preview {
-    ContentView()
+    ReportCheck(
+        report: MaintenanceReport(
+            lokasi: "Ruang Server Lt. 2",
+            kerusakan: "AC Tidak Dingin",
+            akibat: "Ruangan Terlalu Panas",
+            tindakan: "Membersihkan filter dan isi ulang freon"
+        ),
+        date: Date()
+    )
 }
 
 
-
-
+// MARK: - ALLAHUAKBARRRR
 
