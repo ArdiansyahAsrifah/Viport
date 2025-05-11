@@ -119,8 +119,7 @@ class SpeechRecognizer: NSObject, ObservableObject, SFSpeechRecognizerDelegate {
         var actionTaken = ""
 
 
-//        let sentences = text.split(whereSeparator: { $0 == "." })
-        let sentences = text.split(separator: "roger")
+        let sentences = text.split(whereSeparator: { $0 == "." })
 
         for sentence in sentences {
             let trimmedSentence = sentence.trimmingCharacters(in: .whitespacesAndNewlines)
