@@ -11,17 +11,14 @@ import AVFoundation
 import Speech
 import NaturalLanguage
 import TipKit
+import UIKit
 
-
-//MARK: - Variable Report
 struct MaintenanceReport {
     var lokasi: String
     var kerusakan: String
     var akibat: String
     var tindakan: String
 }
-
-
 
 struct ContentView: View {
     // MARK: - Variable
@@ -95,35 +92,7 @@ struct ContentView: View {
         .shadow(radius: 5)
         .padding()
     }
-    
-//    var mainCardView: some View {
-//        VStack(spacing: 8) {
-//            ZStack {
-//                RoundedRectangle(cornerRadius: 10)
-//                    .fill(Color("BlueColor"))
-//                    .overlay(
-//                        RoundedRectangle(cornerRadius: 10)
-//                            .stroke(Color.black, lineWidth: 6)
-//                    )
-//                    .frame(width: 330, height: isExpanded ? 500 : 380)
-//                
-//                ScrollView {
-//                    VStack(alignment: .center, spacing: 20) {
-//                        contentForSelectedMode()
-//                    }
-//                    .frame(width: 300)
-//                }
-//                .frame(width: 300, height: isExpanded ? 480 : 360)
-//                
-//                
-//            }
-//            .offset(x: 5, y: 490)
-//            
-//            Spacer(minLength: 15)
-//            bottomControls
-//        }
-//    }
-    
+        
     var mainCardView: some View {
             VStack(spacing: 8) {
                 ZStack {
@@ -147,6 +116,9 @@ struct ContentView: View {
                 
                 
                 Button(action: {
+                    let impactFeedbackgenerator = UIImpactFeedbackGenerator(style: .medium)
+                    impactFeedbackgenerator.prepare()
+                    impactFeedbackgenerator.impactOccurred()
                     
                     isExpanded.toggle()
                 }) {
@@ -161,7 +133,7 @@ struct ContentView: View {
                 
                 bottomControls
             }
-            .animation(.easeInOut(duration: 0.3), value: isExpanded) 
+            .animation(.easeInOut(duration: 0.3), value: isExpanded)
         }
     
     func contentForSelectedMode() -> some View {
@@ -174,10 +146,13 @@ struct ContentView: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 16)
                     .padding(.top, 10)
+                    .transition(.move(edge: .bottom))
             } else if selectedMode == "cekLaporan" {
                 cekLaporanView
+                    .transition(.move(edge: .bottom))
             } else if selectedMode == "riwayatLaporan" {
                 riwayatView
+                    .transition(.move(edge: .bottom))
             } else {
                 let displayText = speechRecognizer.transcribedText.isEmpty ? "Laporkan Maintenance" : speechRecognizer.transcribedText
                 Text(displayText)
@@ -188,7 +163,9 @@ struct ContentView: View {
                     .padding(.top, 10)
             }
         }
+        .animation(.bouncy(duration: 0.5), value: selectedMode)
     }
+    
     
     var cekLaporanView: some View {
         VStack(spacing: 10) {
@@ -211,6 +188,11 @@ struct ContentView: View {
                 }
                 .pickerStyle(.menu)
                 .font(.title2)
+                .onChange(of: selectedTempat) { newValue in
+                    let impactFeedbackgenerator = UIImpactFeedbackGenerator(style: .light)
+                    impactFeedbackgenerator.prepare()
+                    impactFeedbackgenerator.impactOccurred()
+                }
                
             }
 
@@ -230,6 +212,8 @@ struct ContentView: View {
                     .frame(height: 150)
                     .clipped()
                     .cornerRadius(12)
+                    .transition(.scale)
+                    .animation(.easeInOut(duration: 0.3), value: selectedImage)
             } else {
                 RoundedRectangle(cornerRadius: 12)
                     .fill(Color("YellowReport"))
@@ -341,6 +325,11 @@ struct ContentView: View {
     
     func actionButton(icon: String, label: String, mode: String) -> some View {
         Button(action: {
+            
+            let impactFeedbackgenerator = UIImpactFeedbackGenerator(style: .medium)
+            impactFeedbackgenerator.prepare()
+            impactFeedbackgenerator.impactOccurred()
+            
             selectedMode = mode
         }) {
             HStack(spacing: 5) {
@@ -486,7 +475,7 @@ struct ContentView: View {
 
     
     //MARK: - Export To PDF Function
-    private func exportToPDF() {
+    func exportToPDF() {
         let hostingController = UIHostingController(rootView: cekLaporanView)
         hostingController.view.frame = CGRect(x: 0, y: 0, width: 595, height: 842)
         hostingController.view.backgroundColor = .clear
