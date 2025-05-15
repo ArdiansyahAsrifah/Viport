@@ -163,7 +163,7 @@ struct ContentView: View {
                     .padding(.top, 10)
             }
         }
-        .animation(.bouncy(duration: 0.5), value: selectedMode)
+        .animation(.easeOut(duration: 0.1), value: selectedMode)
     }
     
     
@@ -273,11 +273,12 @@ struct ContentView: View {
             }
             .frame(width: 300, height: 150)
             .padding(.top, -50)
+            
+            
         }
         
     }
 
-    
     var riwayatView: some View {
         VStack(spacing: 10) {
             Text("Riwayat Laporan")
@@ -395,6 +396,8 @@ struct ContentView: View {
         .padding(.vertical, 10)
         .background(RoundedRectangle(cornerRadius: 10).fill(Color("BlueColor")))
         .shadow(radius: 5)
+        
+
     }
 
 

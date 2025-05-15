@@ -42,6 +42,10 @@
     <string>Kami memerlukan kamera untuk mengambil foto bukti maintenance</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Kami memerlukan akses galeri untuk upload foto bukti maintenance</string>
+    <key>AppIntents</key>
+    <string>CreateMaintenanceReportIntent</string>
+    
+    
 
 </dict>
 </plist>
