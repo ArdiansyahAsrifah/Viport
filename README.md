@@ -37,3 +37,10 @@
 - UIKit (untuk akses galeri & kamera)
 - TipKit *(opsional untuk tips UI)*
 - PDFKit *(untuk ekspor laporan ke PDF)*
+
+---
+
+## 👨‍💻 Kontributor
+Muhammad Ardiansyah Asrifah
+Apple Developer Academy @ BINUS - Tangerang
+
