@@ -7,6 +7,7 @@
 
 import SwiftUI
 import TipKit
+import AppIntents
 
 
 @main
@@ -21,7 +22,9 @@ struct FieldMateV3App: App {
                    report: parseReport(from: speechRecognizer.summaryText) 
                )
         }
+        
     }
+    
     
     func parseReport(from text: String) -> MaintenanceReport {
         func extract(_ key: String) -> String {
@@ -42,4 +45,9 @@ struct FieldMateV3App: App {
             tindakan: extract("tindakan")
         )
     }
+
 }
+
+
+
+

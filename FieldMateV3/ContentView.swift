@@ -22,6 +22,7 @@ struct MaintenanceReport {
 
 struct ContentView: View {
     // MARK: - Variable
+    @FocusState private var isFocused: Bool
     @State private var showReportPage = false
     @State private var isExpanded = false
     @State private var navigateToReportCheck = false
@@ -372,16 +373,24 @@ struct ContentView: View {
                 Image(systemName: icon)
                     .font(.title2)
                     .foregroundColor(.white)
-
+                
                 Text(title)
                     .font(.headline)
                     .foregroundColor(.white)
                     .padding(.trailing, 5)
-
+                
                 Spacer()
+                
+                Button(action: {
+                    isFocused = false
+                }) {
+                    Image(systemName: "keyboard.chevron.compact.down")
+                        .foregroundColor(.white)
+                }
             }
             
             TextEditor(text: content)
+                .focused($isFocused)
                 .padding(10)
                 .background(Color.white.opacity(0.1))
                 .cornerRadius(8)
@@ -390,14 +399,11 @@ struct ContentView: View {
                 .frame(minHeight: 100)
                 .scrollContentBackground(.hidden)
                 .background(Color.clear)
-    
         }
         .padding(.horizontal)
         .padding(.vertical, 10)
         .background(RoundedRectangle(cornerRadius: 10).fill(Color("BlueColor")))
         .shadow(radius: 5)
-        
-
     }
 
 
@@ -477,33 +483,37 @@ struct ContentView: View {
     }
 
     
-    //MARK: - Export To PDF Function
+    // MARK: - Export To PDF Function
     func exportToPDF() {
         let hostingController = UIHostingController(rootView: cekLaporanView)
-        hostingController.view.frame = CGRect(x: 0, y: 0, width: 595, height: 842)
         hostingController.view.backgroundColor = .clear
-
+        let targetSize = hostingController.sizeThatFits(in: CGSize(width: 595, height: CGFloat.greatestFiniteMagnitude))
+        hostingController.view.frame = CGRect(origin: .zero, size: targetSize)
         if let window = UIApplication.shared.windows.first {
             window.addSubview(hostingController.view)
+            hostingController.view.setNeedsLayout()
+            hostingController.view.layoutIfNeeded()
         }
 
-        let renderer = UIGraphicsImageRenderer(size: hostingController.view.bounds.size)
+
+        let renderer = UIGraphicsImageRenderer(size: targetSize)
         let image = renderer.image { context in
             hostingController.view.layer.render(in: context.cgContext)
         }
 
+
         hostingController.view.removeFromSuperview()
 
-        let pdfRenderer = UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: 595, height: 842))
+        let pdfRenderer = UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: 595, height: targetSize.height))
 
         let pdfData = pdfRenderer.pdfData { context in
             context.beginPage()
             context.cgContext.setFillColor(UIColor(red: 39/255, green: 59/255, blue: 74/255, alpha: 1.0).cgColor)
-            context.cgContext.fill(CGRect(x: 0, y: 0, width: 595, height: 842))
+            context.cgContext.fill(CGRect(x: 0, y: 0, width: 595, height: targetSize.height))
 
             let margin: CGFloat = 20.0
             let pageWidth = 595.0 - margin * 2
-            let pageHeight = 842.0 - margin * 2
+            let pageHeight = targetSize.height - margin * 2
 
             let aspectWidth = pageWidth / image.size.width
             let aspectHeight = pageHeight / image.size.height
@@ -535,6 +545,7 @@ struct ContentView: View {
             print("Failed to write PDF data: \(error)")
         }
     }
+
 
 
 }

@@ -44,7 +44,11 @@
     <string>Kami memerlukan akses galeri untuk upload foto bukti maintenance</string>
     <key>AppIntents</key>
     <string>CreateMaintenanceReportIntent</string>
-    
+    <key>IntentsSupported</key>
+    <array>
+        <string>ExportPDFIntent</string>
+    </array>
+
     
 
 </dict>

@@ -34,6 +34,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+				Utilities/Untitled.swift,
 			);
 			target = A5CF22C52DC3D1850099A474 /* FieldMateV3 */;
 		};
