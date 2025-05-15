@@ -49,6 +49,13 @@ struct ContentView: View {
         "Grha Unilever"
     ]
     
+    var isFormValid: Bool {
+        !selectedTempat.isEmpty &&
+        !(parsedReport.lokasi.isEmpty) &&
+        !(parsedReport.kerusakan.isEmpty) &&
+        !(parsedReport.tindakan.isEmpty) &&
+        selectedImage != nil
+    }
     
     var body: some View {
         NavigationStack {
@@ -111,7 +118,7 @@ struct ContentView: View {
                         }
 //                        .frame(width: 300)
                     }
-                    .frame(width: isExpanded ? 370 : 300, height: isExpanded ? 480 : 360)
+                    .frame(width: isExpanded ? 370 : 250, height: isExpanded ? 480 : 360)
                 }
                 .offset(x: 5, y: 500)
                 
@@ -168,42 +175,81 @@ struct ContentView: View {
     }
     
     
+    
     var cekLaporanView: some View {
         VStack(spacing: 10) {
-            DatePicker("", selection: $date, displayedComponents: [.date, .hourAndMinute])
+            HStack(spacing: 45) {
+                DatePicker("Tanggal", selection: $date, displayedComponents: .date)
                     .labelsHidden()
                     .colorInvert()
                     .padding(.horizontal)
-                    .padding(.top, 10)
 
-            HStack(spacing: -6) {
-                Text("Pilih Lokasi : ")
-                    .font(.headline)
-                    .foregroundStyle(.white)
-
-                Picker("Pilih Lokasi", selection: $selectedTempat) {
-                    ForEach(pilihanTempat, id: \.self) { tempat in
-                        Text(tempat)
-                          
-                    }
-                }
-                .pickerStyle(.menu)
-                .font(.title2)
-                .onChange(of: selectedTempat) { newValue in
-                    let impactFeedbackgenerator = UIImpactFeedbackGenerator(style: .light)
-                    impactFeedbackgenerator.prepare()
-                    impactFeedbackgenerator.impactOccurred()
-                }
-               
+                DatePicker("Waktu", selection: $date, displayedComponents: .hourAndMinute)
+                    .labelsHidden()
+                    .colorInvert()
+                    .padding(.horizontal)
+                
             }
+            .padding(.top, 10)
+
+
+            VStack(alignment: .leading, spacing: 10) {
+                HStack(spacing: 50) {
+                    if selectedTempat.isEmpty {
+                        Text("Pilih Lokasi")
+                            .font(.headline)
+                            .foregroundStyle(.white)
+                    }
+
+                    Picker("Pilih Lokasi", selection: $selectedTempat) {
+                        ForEach(pilihanTempat, id: \.self) { tempat in
+                            Text(tempat)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .font(.title3)
+                    .onChange(of: selectedTempat) { newValue in
+                        let impactFeedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+                        impactFeedbackGenerator.prepare()
+                        impactFeedbackGenerator.impactOccurred()
+                    }
+                    .padding(10)
+                    .background(Color("BlackColor"))
+                    .cornerRadius(12)
+                }
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color.white.opacity(0.1))
+                .cornerRadius(12)
+            }
+            .padding(.horizontal)
+            
+            Button(action: {
+                exportToPDF()
+            }) {
+                Label("Ekspor Ke PDF", systemImage: "doc.fill")
+                    .font(.subheadline)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(isFormValid ? Color.black : Color.gray)
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+            }
+            .disabled(!isFormValid)
+            .padding()
+            
+            Spacer()
 
             reportCard(icon: "map", title: "Area", content: $parsedReport.lokasi)
             reportCard(icon: "exclamationmark.circle", title: "Kerusakan", content: $parsedReport.kerusakan)
             reportCard(icon: "magnifyingglass", title: "Tindakan", content: $parsedReport.tindakan)
 
+            Spacer()
+            
             Text("Bukti Pengerjaan")
                 .font(.system(size: 18, weight: .bold))
                 .foregroundStyle(.white)
+                .padding(.leading, -150)
 
             if let image = selectedImage {
                 Image(uiImage: image)
@@ -260,24 +306,12 @@ struct ContentView: View {
             .frame(maxWidth: .infinity)
             .padding(.top, 8)
             
-            Button(action: {
-                exportToPDF()
-            }) {
-                Label("Ekspor Ke PDF", systemImage: "doc.fill")
-                    .font(.subheadline)
-                    .padding(10)
-                    .frame(maxWidth: .infinity)
-                    .background(Color.black)
-                    .foregroundColor(.white)
-                    .cornerRadius(12)
-            }
-            .frame(width: 300, height: 150)
-            .padding(.top, -50)
-            
-            
+    
         }
+        .frame(maxWidth: 400)
         
     }
+        
 
     var riwayatView: some View {
         VStack(spacing: 10) {
