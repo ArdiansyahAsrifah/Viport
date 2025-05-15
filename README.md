@@ -41,6 +41,6 @@
 ---
 
 ## 👨‍💻 Kontributor
-Muhammad Ardiansyah Asrifah
-Apple Developer Academy @ BINUS - Tangerang
+- Muhammad Ardiansyah Asrifah
+- Apple Developer Academy @ BINUS - Tangerang
 
