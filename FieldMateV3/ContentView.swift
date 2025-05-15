@@ -134,7 +134,7 @@ struct ContentView: View {
                 
                 bottomControls
             }
-            .animation(.easeInOut(duration: 0.3), value: isExpanded)
+            .animation(.easeInOut(duration: 0.5), value: isExpanded)
         }
     
     func contentForSelectedMode() -> some View {
@@ -164,7 +164,7 @@ struct ContentView: View {
                     .padding(.top, 10)
             }
         }
-        .animation(.easeOut(duration: 0.1), value: selectedMode)
+        .animation(.easeOut(duration: 0.2), value: selectedMode)
     }
     
     
@@ -197,9 +197,8 @@ struct ContentView: View {
                
             }
 
-            reportCard(icon: "map", title: "Lokasi", content: $parsedReport.lokasi)
+            reportCard(icon: "map", title: "Area", content: $parsedReport.lokasi)
             reportCard(icon: "exclamationmark.circle", title: "Kerusakan", content: $parsedReport.kerusakan)
-            reportCard(icon: "face.dashed", title: "Akibat", content: $parsedReport.akibat)
             reportCard(icon: "magnifyingglass", title: "Tindakan", content: $parsedReport.tindakan)
 
             Text("Bukti Pengerjaan")
@@ -442,7 +441,7 @@ struct ContentView: View {
     //MARK: - Report Parsing
     func parseReport(from text: String) -> MaintenanceReport {
         let locationKeywords = ["lokasi", "di", "tempat", "area", "posisi", "ruang", "titik", "dekat"]
-        let componentKeywords = ["komponen", "bagian", "mesin", "sistem", "perangkat"]
+        let componentKeywords = ["komponen", "bagian", "rusak", "kerusakan", "perangkat"]
         let damageKeywords = ["kerusakan", "rusak", "pecah", "hilang", "terbakar", "akibat"]
         let actionKeywords = ["perbaikan", "tindakan", "solusi", "perbaiki", "mengganti", "memperbaiki"]
 
@@ -451,8 +450,9 @@ struct ContentView: View {
         var akibat = "-"
         var tindakan = "-"
 
-        let sentences = text.lowercased().components(separatedBy: CharacterSet(charactersIn: ".\n"))
 
+        let sentences = text.lowercased().components(separatedBy: "roger")
+        
         for sentence in sentences {
             let trimmed = sentence.trimmingCharacters(in: .whitespacesAndNewlines)
             if trimmed.isEmpty { continue }
