@@ -150,11 +150,12 @@ struct ContentView: View {
                 let displayText = speechRecognizer.transcribedText.isEmpty ? "Laporkan Maintenance" : speechRecognizer.transcribedText
                 Text(displayText)
                     .foregroundColor(.white)
-                    .font(.system(size: 20, weight: .bold))
+                    .font(.system(size: 20, weight: .bold, design: .monospaced))
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 16)
                     .padding(.top, 10)
                     .transition(.move(edge: .bottom))
+
             } else if selectedMode == "cekLaporan" {
                 cekLaporanView
                     .transition(.move(edge: .bottom))
@@ -165,10 +166,12 @@ struct ContentView: View {
                 let displayText = speechRecognizer.transcribedText.isEmpty ? "Laporkan Maintenance" : speechRecognizer.transcribedText
                 Text(displayText)
                     .foregroundColor(.white)
-                    .font(.system(size: 20, weight: .bold))
+                    .font(.system(size: 20, weight: .bold, design: .monospaced))
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 16)
                     .padding(.top, 10)
+                    .transition(.move(edge: .bottom))
+
             }
         }
         .animation(.easeOut(duration: 0.2), value: selectedMode)
@@ -207,7 +210,7 @@ struct ContentView: View {
                         }
                     }
                     .pickerStyle(.menu)
-                    .font(.title3)
+                    .font(.system(.title3, design: .monospaced))
                     .onChange(of: selectedTempat) { newValue in
                         let impactFeedbackGenerator = UIImpactFeedbackGenerator(style: .light)
                         impactFeedbackGenerator.prepare()
@@ -247,9 +250,10 @@ struct ContentView: View {
             Spacer()
             
             Text("Bukti Pengerjaan")
-                .font(.system(size: 18, weight: .bold))
+                .font(.title3)
+                .fontWeight(.bold)
                 .foregroundStyle(.white)
-                .padding(.leading, -150)
+                .padding(.leading, -125)
 
             if let image = selectedImage {
                 Image(uiImage: image)
